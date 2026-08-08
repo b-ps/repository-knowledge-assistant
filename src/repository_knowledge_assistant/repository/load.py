@@ -50,7 +50,7 @@ class RepositoryLoader:
         """ 
         documents = []
 
-        for file_path in repo_path.rglob("*"):
+        for i, file_path in enumerate(repo_path.rglob("*")):
 
             if not file_path.is_file():
                 continue
@@ -67,17 +67,17 @@ class RepositoryLoader:
                 continue
 
             documents.append(
-                RawDocument(file_path, text, file_path.suffix())
+                RawDocument(file_path, text, file_path.suffix, file_path.name, f"r{str()}")
             )
 
         return documents
 
     def _ignore(self, path: Path) -> bool:
 
-        if any(part in self.IGNORED_DIRECTORIES for part in path.parts()):
+        if any(part in self.IGNORED_DIRECTORIES for part in path.parts):
             return True
 
         return False
 
     def _is_supported(self, path: Path) -> bool:
-        return path.suffix() in self.SUPPORTED_EXTENSIONS
+        return path.suffix in self.SUPPORTED_EXTENSIONS
