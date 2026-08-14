@@ -1,5 +1,6 @@
 from pathlib import Path
 from dataclasses import dataclass
+from numpy import ndarray
 
 @dataclass
 class RawDocument:
@@ -24,4 +25,11 @@ class Chunk:
     name: str
     text: str
     chunk_id: str
-    
+
+@dataclass
+class EmbedChunk:
+    path: Path
+    name: str
+    text: str
+    chunk_id: str
+    embedding: ndarray

@@ -67,7 +67,7 @@ class RepositoryLoader:
                 continue
 
             documents.append(
-                RawDocument(file_path, text, file_path.suffix, file_path.name, f"r{str()}")
+                RawDocument(file_path, text, file_path.suffix, file_path.name, f"r{str(i)}")
             )
 
         return documents
