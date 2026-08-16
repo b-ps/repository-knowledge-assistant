@@ -28,7 +28,7 @@ class RAG:
         self.instructions = instructions
         self.prompt_template = prompt_template
 
-    def rag(self, query, search_method = 'hybrid'):
+    def answer(self, query, search_method = 'hybrid'):
         search_results = self.retriever.retrieve(query, search_method)
         prompt = self._build_prompt(query, search_results)
         answer = self.llm.generate(self.instructions, prompt)

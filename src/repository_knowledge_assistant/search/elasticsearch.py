@@ -58,8 +58,8 @@ class Index:
     def get_document(self, id: str):
         return self.client.get(index = self.index_name, id = id)
 
-    def text_search(self, query: str):
-        response = self.client.search(index = self.index_name, query = {"match": {"text": query}})
+    def text_search(self, query: str, top_k: int = 5) -> List[dict]:
+        response = self.client.search(index = self.index_name, query = {"match": {"text": query}}, size = top_k)
         return [
             {
                 "id": hit["_id"],
@@ -69,7 +69,7 @@ class Index:
             for hit in response["hits"]["hits"]
         ]
 
-    def keyword_search(self, keywords: List[str], all: bool = True):
+    def keyword_search(self, keywords: List[str], all: bool = True) -> List[dict]:
         if all:
             query = {
                 "bool": {
@@ -94,15 +94,16 @@ class Index:
             for hit in response["hits"]["hits"]
         ]
 
-    def vector_search(self, embed_query: List[float]):
+    def vector_search(self, embed_query: List[float], top_k: int = 5) -> List[dict]:
         response = self.client.search(
             index = self.index_name, 
             knn={
                 "field": "embedding",
                 "query_vector": embed_query,
-                "k": 5,
+                "k": top_k,
                 "num_candidates": 50,
-            }
+            },
+            size = top_k
         )
         return [
             {
@@ -113,9 +114,9 @@ class Index:
             for hit in response["hits"]["hits"]
         ]
 
-    def hybrid_search(self, query: str, embed_query: List[float]):
-        text_results = self.text_search(query)
-        vector_results = self.vector_search(embed_query)
+    def hybrid_search(self, query: str, embed_query: List[float], top_k: int = 5) -> List[dict]:
+        text_results = self.text_search(query, top_k)
+        vector_results = self.vector_search(embed_query, top_k)
 
         rank_constant = 60
         rrf_scores = {}
