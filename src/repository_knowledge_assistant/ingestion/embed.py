@@ -18,7 +18,10 @@ class RepositoryEmbedder:
                 name = doc.name,
                 text = doc.text,
                 chunk_id = doc.chunk_id,
-                embedding = embeddings[i]
+                embedding = embeddings[i].tolist()
             ) 
             for i, doc in enumerate(docs)
         ]
+
+    def embed_query(self, query: str) -> List[float]:
+        return self.model.encode_query(query, normalize_embeddings = True).tolist()

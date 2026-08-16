@@ -1,6 +1,6 @@
 from pathlib import Path
 from dataclasses import dataclass
-from numpy import ndarray
+from typing import List
 
 @dataclass
 class RawDocument:
@@ -32,4 +32,4 @@ class EmbedChunk:
     name: str
     text: str
     chunk_id: str
-    embedding: ndarray
+    embedding: List[float]
