@@ -1,25 +1,12 @@
-from elasticsearch import Elasticsearch
 from elasticsearch.helpers import bulk, BulkIndexError
 from repository_knowledge_assistant.ingestion.utils import EmbedChunk
+from repository_knowledge_assistant.utils import BaseIndex
 from typing import List
 
-class Index:
+class Index(BaseIndex):
 
     index_name: str
-
-    def __init__(self, host: str = "http://localhost:9200", index_name: str = "repository_chunks"):
-        self.client = Elasticsearch(host)
-        self.index_name = index_name
-
-    
-
-    def create_index(self):
-        if self._exists():
-            return
-
-        self.client.indices.create(
-            index = self.index_name,
-            mappings = {
+    mappings: dict = {
                 "properties": {
                     "path": {"type": "keyword"},
                     "name": {"type": "keyword"},
@@ -27,13 +14,6 @@ class Index:
                     "embedding": {"type": "dense_vector", "similarity": "cosine"}
                 }
             }
-        )
-
-    def delete_index(self):
-        if not self._exists():
-            return
-
-        self.client.indices.delete(index = self.index_name)
 
     def index_documents(self, docs: List[EmbedChunk]):
         actions = [
@@ -54,9 +34,6 @@ class Index:
             print("Failed to index documents:") 
             for err in e.errors:
                 print(err)
-
-    def get_document(self, id: str):
-        return self.client.get(index = self.index_name, id = id)
 
     def text_search(self, query: str, top_k: int = 5) -> List[dict]:
         response = self.client.search(index = self.index_name, query = {"match": {"text": query}}, size = top_k)
@@ -160,6 +137,3 @@ class Index:
             }
             for item in ranked_results[:5]
         ]
-
-    def _exists(self):
-            return self.client.indices.exists(index = self.index_name)

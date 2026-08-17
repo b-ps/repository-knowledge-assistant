@@ -32,7 +32,7 @@ class RAG:
         search_results = self.retriever.retrieve(query, search_method)
         prompt = self._build_prompt(query, search_results)
         answer = self.llm.generate(self.instructions, prompt)
-        return answer
+        return answer, search_results
 
     def _build_context(self, results):
         lines = []

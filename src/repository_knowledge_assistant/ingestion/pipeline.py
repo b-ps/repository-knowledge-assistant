@@ -1,9 +1,9 @@
-from .chunk import RepositoryChunker
-from .clone import RepositoryCloner
-from .load import RepositoryLoader
-from .parse import RepositoryParser
-from .embed import RepositoryEmbedder
-from ..search.elasticsearch import Index
+from repository_knowledge_assistant.ingestion.chunk import RepositoryChunker
+from repository_knowledge_assistant.ingestion.clone import RepositoryCloner
+from repository_knowledge_assistant.ingestion.load import RepositoryLoader
+from repository_knowledge_assistant.ingestion.parse import RepositoryParser
+from repository_knowledge_assistant.ingestion.embed import RepositoryEmbedder
+from repository_knowledge_assistant.search.elasticsearch import Index
 
 from prefect import flow, task
 
